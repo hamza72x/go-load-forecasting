@@ -2,13 +2,15 @@ package main
 
 import (
 	"strconv"
+	"time"
+
+	"gonum.org/v1/plot/plotter"
 )
 
-// Graph containing x and y values
-type Graph struct {
-	Year    int
-	xValues []float64
-	yValues []float64
+// GraphValue containing x and y values
+type GraphValue struct {
+	Year int
+	XYs  plotter.XYs
 }
 
 // CSVRow a single row of the csv file
@@ -50,6 +52,37 @@ type Row struct {
 	Month  int
 	Day    int
 	Hours  map[string]string
+}
+
+// returns as 01
+func (r *Row) monthStr() string {
+	var str = strconv.Itoa(r.Month)
+	if len(str) == 1 {
+		str = "0" + str
+	}
+	return str
+}
+
+// returns as 01
+func (r *Row) dayStr() string {
+	var str = strconv.Itoa(r.Day)
+	if len(str) == 1 {
+		str = "0" + str
+	}
+	return str
+}
+
+// returns day count from 1 to 365
+func (r *Row) getDayCountForYAxis() float64 {
+	t1, err := time.Parse(dateLayout1, strconv.Itoa(r.Year)+"-01-01")
+	if err != nil {
+		panic("Error parsing t1: " + err.Error())
+	}
+	t2, err := time.Parse(dateLayout1, strconv.Itoa(r.Year)+"-"+r.monthStr()+"-"+r.dayStr())
+	if err != nil {
+		panic("Error parsing t2: " + err.Error())
+	}
+	return float64(t2.Sub(t1) / (24 * time.Hour))
 }
 
 // DailyAverage average of loads of 24 hours

@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/gocarina/gocsv"
+	hel "github.com/thejini3/go-helper"
 )
 
 // parse csv file to []Row array
@@ -24,12 +25,18 @@ func getRowsFromCSV() []Row {
 	}
 
 	var rows []Row
+	var count = 0
 	// convert []CSVRow to []Row
 	for i := range csvRows {
 		// * => converting pointer to local variable
 		// since it was parsed as pointer
 		// check top
 		var csvRow = *csvRows[i]
+
+		if !hel.ContainsInt(uniqueYears, csvRow.Year) {
+			uniqueYears = append(uniqueYears, csvRow.Year)
+		}
+
 		rows = append(rows, Row{
 			ZoneID: csvRow.ZoneID,
 			Year:   csvRow.Year,
@@ -44,7 +51,12 @@ func getRowsFromCSV() []Row {
 				"h21": csvRow.H21, "h22": csvRow.H22, "h23": csvRow.H23, "h24": csvRow.H24,
 			},
 		})
+
+		count++
 	}
+
+	hel.Pl("Unique years in csv file:", uniqueYears)
+	hel.Pl("Total rows:", count)
 
 	return rows
 }
