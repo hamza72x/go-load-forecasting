@@ -8,7 +8,7 @@ import (
 )
 
 // parse csv file to []Row array
-func getRowsFromCSV() []Row {
+func setRowsFromCSV() {
 	// open file
 	var csvFile, err = os.OpenFile(csvLoadFile, os.O_RDWR|os.O_CREATE, os.ModePerm)
 
@@ -24,7 +24,6 @@ func getRowsFromCSV() []Row {
 		panic(err)
 	}
 
-	var rows []Row
 	var count = 0
 	// convert []CSVRow to []Row
 	for i := range csvRows {
@@ -58,5 +57,4 @@ func getRowsFromCSV() []Row {
 	hel.Pl("Unique years in csv file:", uniqueYears)
 	hel.Pl("Total rows:", count)
 
-	return rows
 }

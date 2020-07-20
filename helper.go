@@ -3,7 +3,10 @@ package main
 import (
 	"log"
 	"regexp"
+	"strconv"
+	"time"
 
+	hel "github.com/thejini3/go-helper"
 	"gonum.org/v1/plot/plotter"
 )
 
@@ -31,17 +34,48 @@ func getNumbersOnly(str string) string {
 // 	}
 // }
 
-func getPloterXYsOfYear(year int, rows []Row) GraphValue {
+func getPloterXYsOfYear(year int) plotter.XYs {
 	// var xValues []float64
 	// var yValues []float64
 	var XYs []plotter.XY
-	for _, row := range rows {
-		if year == row.Year {
-			XYs = append(XYs, plotter.XY{X: row.getDayCountForYAxis(), Y: row.getDailyAverage()})
+	var count = 0
+	for month := 1; month <= 12; month++ {
+
+		t := date(year, month, 0)
+
+		for day := 1; day <= t.Day(); day++ {
+			XYs = append(XYs, plotter.XY{X: float64(count), Y: getAverageLoadOfYMD(year, month, day)})
+			count++
 		}
 	}
-	return GraphValue{
-		Year: year,
-		XYs:  XYs,
+	// XYs = append(XYs, plotter.XY{X: 1, Y: 10})
+	// XYs = append(XYs, plotter.XY{X: 2, Y: 11})
+	// XYs = append(XYs, plotter.XY{X: 3, Y: 13})
+	// XYs = append(XYs, plotter.XY{X: 4, Y: 14})
+	hel.Pl("Generated plots for year:", year, "- total XYs:", count)
+	return XYs
+}
+
+func getAverageLoadOfYMD(year, month, day int) float64 {
+	var load float64 = 0
+	for _, row := range rows {
+		if year == row.Year && month == row.Month && day == row.Day {
+			load = row.getDailyAverage()
+			break
+		}
 	}
+	return load
+}
+
+// dORm day or month
+func timify(dORm int) string {
+	var str = strconv.Itoa(dORm)
+	if len(str) == 1 {
+		str = "0" + str
+	}
+	return str
+}
+
+func date(year, month, day int) time.Time {
+	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 }

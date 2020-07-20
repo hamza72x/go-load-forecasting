@@ -8,6 +8,7 @@ const csvLoadFile = "csv-files/load-history.csv"
 const dateLayout1 = "2006-01-02"
 
 var uniqueYears []int
+var rows []Row
 
 // h1, h2, h3, h4....h24
 var hourKeys []string
@@ -18,5 +19,6 @@ func main() {
 		hourKeys = append(hourKeys, "h"+strconv.Itoa(i))
 	}
 
-	render(getRowsFromCSV())
+	setRowsFromCSV()
+	render()
 }

@@ -54,31 +54,13 @@ type Row struct {
 	Hours  map[string]string
 }
 
-// returns as 01
-func (r *Row) monthStr() string {
-	var str = strconv.Itoa(r.Month)
-	if len(str) == 1 {
-		str = "0" + str
-	}
-	return str
-}
-
-// returns as 01
-func (r *Row) dayStr() string {
-	var str = strconv.Itoa(r.Day)
-	if len(str) == 1 {
-		str = "0" + str
-	}
-	return str
-}
-
 // returns day count from 1 to 365
 func (r *Row) getDayCountForYAxis() float64 {
 	t1, err := time.Parse(dateLayout1, strconv.Itoa(r.Year)+"-01-01")
 	if err != nil {
 		panic("Error parsing t1: " + err.Error())
 	}
-	t2, err := time.Parse(dateLayout1, strconv.Itoa(r.Year)+"-"+r.monthStr()+"-"+r.dayStr())
+	t2, err := time.Parse(dateLayout1, strconv.Itoa(r.Year)+"-"+timify(r.Month)+"-"+timify(r.Day))
 	if err != nil {
 		panic("Error parsing t2: " + err.Error())
 	}
