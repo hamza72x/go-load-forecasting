@@ -12,7 +12,6 @@ func render() {
 	var arr []interface{}
 
 	for _, year := range uniqueYears {
-
 		// get xys value for `year`
 		var xys = getPloterXYsOfYear(year)
 
@@ -24,8 +23,18 @@ func render() {
 		})
 	}
 
+	build("build/2004vs2005.png", []interface{}{
+		timify(2004), getPloterXYsOfYear(2004),
+		timify(2005), getPloterXYsOfYear(2005),
+	})
+
+	build("build/2005vs2006.png", []interface{}{
+		timify(2005), getPloterXYsOfYear(2005),
+		timify(2006), getPloterXYsOfYear(2006),
+	})
+
 	// build vs-vs png
-	build("build/year-vs-year.png", arr)
+	build("build/all-year-vs-year.png", arr)
 
 }
 

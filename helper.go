@@ -39,12 +39,18 @@ func getPloterXYsOfYear(year int) plotter.XYs {
 	// var yValues []float64
 	var XYs []plotter.XY
 	var count = 0
+	var prevLoad float64 = 15200
 	for month := 1; month <= 12; month++ {
 
 		t := date(year, month, 0)
 
 		for day := 1; day <= t.Day(); day++ {
-			XYs = append(XYs, plotter.XY{X: float64(count), Y: getAverageLoadOfYMD(year, month, day)})
+			var avgLoad = getAverageLoadOfYMD(year, month, day)
+			if avgLoad == 0 {
+				avgLoad = prevLoad
+			}
+			prevLoad = avgLoad
+			XYs = append(XYs, plotter.XY{X: float64(count), Y: avgLoad})
 			count++
 		}
 	}
