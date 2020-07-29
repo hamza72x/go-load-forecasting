@@ -47,6 +47,7 @@ func getPloterXYsOfYear(year int) plotter.XYs {
 		for day := 1; day <= t.Day(); day++ {
 			var avgLoad = getAverageLoadOfYMD(year, month, day)
 			if avgLoad == 0 {
+				hel.Pl("Avg 0", avgLoad)
 				avgLoad = prevLoad
 			}
 			prevLoad = avgLoad
