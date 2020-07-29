@@ -39,7 +39,7 @@ func getPloterXYsOfYear(year int) plotter.XYs {
 	// var yValues []float64
 	var XYs []plotter.XY
 	var count = 0
-	var prevLoad float64 = 15200
+	var prevLoad float64 = 0
 	for month := 1; month <= 12; month++ {
 
 		t := date(year, month, 0)

@@ -35,7 +35,9 @@ func setRowsFromCSV() {
 		if !hel.ContainsInt(uniqueYears, csvRow.Year) {
 			uniqueYears = append(uniqueYears, csvRow.Year)
 		}
-
+		if csvRow.ZoneID != 1 {
+			continue
+		}
 		rows = append(rows, Row{
 			ZoneID: csvRow.ZoneID,
 			Year:   csvRow.Year,
