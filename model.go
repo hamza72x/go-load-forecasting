@@ -7,14 +7,24 @@ import (
 	"gonum.org/v1/plot/plotter"
 )
 
+type xDailyData struct {
+	Date string  `csv:"Date"`
+	Hour int     `csv:"Hour"`
+	Load float64 `csv:"Load"`
+}
+type xTimeValue struct {
+	Time  string `csv:"time"`
+	Value string `csv:"value"`
+}
+
 // GraphValue containing x and y values
-type GraphValue struct {
+type xGraphValue struct {
 	Year int
 	XYs  plotter.XYs
 }
 
 // CSVRow a single row of the csv file
-type CSVRow struct {
+type xCSVRow struct {
 	ZoneID int    `csv:"zone_id"`
 	Year   int    `csv:"year"`
 	Month  int    `csv:"month"`
@@ -46,7 +56,7 @@ type CSVRow struct {
 }
 
 // Row for usuability
-type Row struct {
+type xRow struct {
 	ZoneID int
 	Year   int
 	Month  int
@@ -55,7 +65,7 @@ type Row struct {
 }
 
 // returns day count from 1 to 365
-func (r *Row) getDayCountForYAxis() float64 {
+func (r *xRow) getDayCountForYAxis() float64 {
 	t1, err := time.Parse(dateLayout1, strconv.Itoa(r.Year)+"-01-01")
 	if err != nil {
 		panic("Error parsing t1: " + err.Error())
@@ -68,7 +78,7 @@ func (r *Row) getDayCountForYAxis() float64 {
 }
 
 // DailyAverage average of loads of 24 hours
-func (r *Row) getDailyAverage() float64 {
+func (r *xRow) getDailyAverage() float64 {
 
 	var total int = 0
 	for i := range hourKeys {
