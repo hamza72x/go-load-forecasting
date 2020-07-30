@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-
 	"github.com/gocarina/gocsv"
 	hel "github.com/thejini3/go-helper"
 )
@@ -49,22 +47,15 @@ func setRowsFromCSV() {
 
 }
 
+// last lines empty new line isn't checked
+// so handle that
+/*
+if len(row.Time) == 0 || len(row.Value) == 0 {
+	continue
+}
+*/
 func parseCsv(filename string, v interface{}) {
-
-	// hel.Pl("Parsing", filename)
-
-	var csvFile, err = os.OpenFile(filename, os.O_RDWR|os.O_CREATE, os.ModePerm)
-
-	if err != nil {
-		panic(err)
+	if err := gocsv.UnmarshalString(hel.GetFileStr(filename), v); err != nil {
+		panic("Error UnmarshalString parseCsv" + err.Error())
 	}
-
-	defer csvFile.Close()
-
-	// parse file to CSVRow
-	if err := gocsv.UnmarshalFile(csvFile, v); err != nil {
-		panic(err)
-	}
-
-	// hel.Pl("Parsed", filename)
 }
