@@ -13,8 +13,8 @@ type xDailyData struct {
 	Load float64 `csv:"Load"`
 }
 type xTimeValue struct {
-	Time  string `csv:"time"`
-	Value string `csv:"value"`
+	Time  string  `csv:"time"`
+	Value float64 `csv:"value"`
 }
 
 // GraphValue containing x and y values
