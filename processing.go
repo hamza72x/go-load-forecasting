@@ -95,7 +95,7 @@ func sldcToDailyData() {
 		panic(err)
 	}
 
-	if err = hel.StrToFile(folder+"/processed-avg-peak.csv", outputTxt); err != nil {
+	if err = hel.StrToFile("build/processed-avg-peak.csv", outputTxt); err != nil {
 		panic(err)
 	}
 }
