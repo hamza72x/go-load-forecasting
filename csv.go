@@ -18,7 +18,7 @@ func setRowsFromCSV() {
 		// since it was parsed as pointer
 		// check top
 
-		if !hel.ContainsInt(uniqueYears, row.Year) {
+		if !hel.IntContains(uniqueYears, row.Year) {
 			uniqueYears = append(uniqueYears, row.Year)
 		}
 		if row.ZoneID != 1 {
@@ -55,7 +55,12 @@ if len(row.Time) == 0 || len(row.Value) == 0 {
 }
 */
 func parseCsv(filename string, v interface{}) {
-	if err := gocsv.UnmarshalString(hel.GetFileStr(filename), v); err != nil {
+	str, err := hel.FileStr(filename)
+	if err != nil {
+		panic("error hel.FileStr: " + filename)
+	}
+	err = gocsv.UnmarshalString(str, v)
+	if err != nil {
 		panic("Error UnmarshalString parseCsv" + err.Error())
 	}
 }

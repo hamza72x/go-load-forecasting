@@ -35,9 +35,9 @@ func dailyData1() {
 func sldcToDailyData() {
 
 	folder := "SLDC_Data"
-	// outputTxt := "Date,Hour,Min,Load\n"
-	outputTxt := "Date,Hour,Load\n"
-	// outputTxt := "Date,Avg,Peak\n"
+	oDateHourMinLoad := "Date,Hour,Min,Load\n"
+	oDateHourLoad := "Date,Hour,Load\n"
+	oDateAvgPeak := "Date,Avg,Peak\n"
 
 	err := filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() || filepath.Ext(path) != ".csv" {
@@ -64,30 +64,39 @@ func sldcToDailyData() {
 				// row.Time 00:00
 				// hourMin [01, 00]
 				hourMin := strings.Split(row.Time, ":")
-				// minute string : 00
+				// 01 or 02 or 03
+				hourStr := hourMin[0]
+				// minute string : 00 or 30
+				minStr := hourMin[1]
+
 				if len(hourMin) != 2 {
 					hel.Pl(hourMin)
 					panic("Invalid hourMin")
 				}
-				minStr := hourMin[1]
-				cond := timify(hour) == hourMin[0] && (minStr == "00" || minStr == "30")
-				if cond {
-					// var min int
-					// if minStr == "00" {
-					// 	min = 0
-					// } else if minStr == "30" {
-					// 	min = 30
-					// } else {
-					// 	panic("Unknown minute: " + err.Error())
-					// }
-					// outputTxt += fmt.Sprintf("%s,%d,%d,%s\n", date, hour, min, row.Value)
 
-					outputTxt += fmt.Sprintf("%s,%d,%0.2f\n", date, hour, row.Value)
+				if timify(hour) == hourStr && minStr == "00" {
+					oDateHourLoad += fmt.Sprintf("%s,%d,%0.2f\n", date, hour, row.Value)
+				}
+
+				if timify(hour) == hourStr && (minStr == "00" || minStr == "30") {
+
+					var minute int
+
+					if minStr == "00" {
+						minute = 0
+					} else if minStr == "30" {
+						minute = 30
+					} else {
+						panic("Unknown minute: " + err.Error())
+					}
+
+					oDateHourMinLoad += fmt.Sprintf("%s,%d,%d,%0.2f\n", date, hour, minute, row.Value)
+
 				}
 			}
 		}
 
-		// outputTxt += fmt.Sprintf("%s,%.2f,%.2f\n", date, total/count, peak)
+		oDateAvgPeak += fmt.Sprintf("%s,%.2f,%.2f\n", date, total/count, peak)
 
 		return err
 	})
@@ -96,11 +105,15 @@ func sldcToDailyData() {
 		panic(err)
 	}
 
-	// if err = hel.StrToFile("build/processed-avg-peak.csv", outputTxt); err != nil {
-	// 	panic(err)
-	// }
+	if err = hel.StrToFile("build/processed-date-hour-load.csv", oDateHourLoad); err != nil {
+		panic(err)
+	}
 
-	if err = hel.StrToFile("build/processed-date-hour-load.csv", outputTxt); err != nil {
+	if err = hel.StrToFile("build/processed-date-hour-minute-load.csv", oDateHourMinLoad); err != nil {
+		panic(err)
+	}
+
+	if err = hel.StrToFile("build/processed-avg-peak.csv", oDateAvgPeak); err != nil {
 		panic(err)
 	}
 }
